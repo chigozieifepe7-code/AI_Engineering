@@ -25,7 +25,6 @@ if GROQ_API_KEY is None:
 # gr.ChatInterface(fn=respond_basic).launch()
 
 
-
 # def respond_basic(message, history):
 #     return f"I'm crazy about AI! And I'm chatting with you in the browser."
 
@@ -33,7 +32,8 @@ if GROQ_API_KEY is None:
 # gr.ChatInterface(fn=respond_basic).launch(inbrowser=True) # (share=True)
 
 def respond_ai(message, history):
-    messages = [{"role": "system", "content": "You are a helpful assistant."}] + history + [{"role": "user", "content": message}]
+    messages = [{"role": "system", "content": "You are a helpful assistant."}
+                ] + history + [{"role": "user", "content": message}]
     client = Groq(api_key=GROQ_API_KEY)
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
@@ -41,5 +41,6 @@ def respond_ai(message, history):
     )
     reply = response.choices[0].message.content
     return reply
+
 
 gr.ChatInterface(fn=respond_ai).launch()
