@@ -61,11 +61,29 @@ Make sure that you only use factual information about Chigozie presented above, 
 
 """
 
+
+# DYNAMIC CONTEXT INJECTION
+
+topic_context = {
+    "2001": "In 2001 Chigo was actively discovering himself and finding out if he wanted to tilt towards the Sciences or Arts.",
+    "cooking": "Chigo enjoys cooking and often experiments with new recipes in his free time.",
+    "current goal": "Chigo is currently doing a six weeks AI challenge by SuperDataScience, this is supposed to act as a refresher course.\
+                    He is also studying for the GCP Associate Cloud Engineer Exam which he will be taking in August."
+
+}
+
 # ADD AI FUNCTIONALITY
 
 
 def respond_ai(message, history):
-    messages = [{"role": "system", "content": system_message}] + \
+    # Inject dynamic context based on keywords in the message.
+    system_message_enhanced = system_message
+    for keyword, context in topic_context.items():
+        if keyword in message.lower():
+            system_message_enhanced += "\n\n" + "***" + context + "***"
+    print(system_message_enhanced)
+
+    messages = [{"role": "system", "content": system_message_enhanced}] + \
         history + [{"role": "user", "content": message}]
     client = OpenAI(api_key=OPENAI_API_KEY)
     response = client.chat.completions.create(
@@ -77,10 +95,3 @@ def respond_ai(message, history):
 
 
 gr.ChatInterface(fn=respond_ai).launch(inbrowser=True)
-
-
-# DYNAMIC CONTEXT INJECTION
-
-topic_context = {
-
-}

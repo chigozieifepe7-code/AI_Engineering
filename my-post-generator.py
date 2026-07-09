@@ -4,15 +4,16 @@
 import os
 import groq
 from groq import Groq
+from openai import OpenAI
 from dotenv import load_dotenv
 
 load_dotenv()
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-client = Groq()
+client = OpenAI()
 
-if GROQ_API_KEY is None:
+if OPENAI_API_KEY is None:
     raise Exception("API key is missing.")
 
 # SEARCHING THE WEB
@@ -21,11 +22,11 @@ chat_completion = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "Tell me the 3 top stories in AI in this past week, according to reliable news media. Do not use simple news aggregators. Each story should be from a separate source and date. Include dates.",
+            "content": "Tell me the 3 top stories in AI in this past week, according to reliable news media. Do not use simple news aggregators. Each story should be from a separate source and date. Include dates. (USE SOURCES LIKE: TLDR_NEWSLETTER)",
         }
     ],
     max_tokens=500,
-    model="groq/compound-mini"
+    model="gpt-4.1-mini"
 )
 
 search_results = chat_completion.choices[0].message.content
@@ -48,7 +49,7 @@ Now please write my linkedIn post based on this information.
 
 completion = client.chat.completions.create(
     
-    model="openai/gpt-oss-20b",
+    model="gpt-4.1-mini",
     messages=[{"role": "system", "content": system_message},
               {"role": "user", "content": prompt}],
     max_tokens=500, 
